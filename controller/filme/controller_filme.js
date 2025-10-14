@@ -79,8 +79,59 @@ const buscarFilmeId = async function(id){
 }
 
 //Insere um novo filme
-const inserirFilme = async function(filme){
+const inserirFilme = async function(filme, contentType){
+    let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
+   
+    try {
 
+        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+            if(filme.nome == '' || filme.nome == null || filme.nome == undefined || filme.nome.length > 100){
+                MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo nome inválido!'
+                return MESSAGE.ERROR_REQUIRED_FIELDS //400
+
+            }else if(filme.sinopse == undefined){
+                MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo sinopse inválido!'
+                return MESSAGE.ERROR_REQUIRED_FIELDS //400
+
+            }else if(filme.data_lancamento == undefined || filme.data_lancamento.length != 10){
+                MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo data lançamento inválido!'
+                return MESSAGE.ERROR_REQUIRED_FIELDS //400
+
+            }else if(filme.duracao == '' || filme.duracao == null || filme.duracao == undefined || filme.duracao.length > 8){
+                MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo duração inválido!'
+                return MESSAGE.ERROR_REQUIRED_FIELDS //400
+
+            }else if(filme.orcamento == '' || filme.orcamento == null || filme.orcamento == undefined || filme.orcamento.length > 16 || typeof(filme.orcamento) != 'number'){
+                MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo orçamento inválido!'
+                return MESSAGE.ERROR_REQUIRED_FIELDS //400
+
+            }else if(filme.trailer == undefined || filme.trailer > 200){
+                MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo trailer inválido!'
+                return MESSAGE.ERROR_REQUIRED_FIELDS //400
+
+            }else if(filme.capa == '' || filme.capa == null || filme.capa == undefined || filme.capa.length > 200){
+                MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo capa inválido!'
+                return MESSAGE.ERROR_REQUIRED_FIELDS //400
+            }else{
+                //Chama a função do DAO para inserir um novo filme!
+                let result = await filmeDAO.setInsertFilms(filme)
+
+                if(result){
+                    MESSAGE.HEADER.status   = MESSAGE.SUCESS_CREATED_ITEM.status
+                    MESSAGE.HEADER.status_code   = MESSAGE.SUCESS_CREATED_ITEM.status_code
+                    MESSAGE.HEADER.messsage   = MESSAGE.SUCESS_CREATED_ITEM.messsage
+
+                    return MESSAGE.HEADER //201
+                }else{
+                    return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+                }
+            }
+        }else{
+            return MESSAGE.ERROR_CONTENT_TYPE //415
+        }
+    } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
 }
 
 //Atualiza um filme filtrando um id
@@ -96,5 +147,6 @@ const excluirrFilme = async function(id){
 
 module.exports = {
     listarFilmes,
-    buscarFilmeId
+    buscarFilmeId,
+    inserirFilme
 }

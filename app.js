@@ -9,6 +9,9 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
+//Cria um objeto especialista no formato JSON para receber os dados do body (POST E PUT)
+const bodyParserJSON = bodyParser.json()
+
 //Import do arquivo de funções  
 // let filme = await controllerFilmes
 
@@ -48,6 +51,21 @@ app.get('/v1/locadora/filme/:id', cors(), async function (request, response) {
 
     //Chama a função da controller para retornar o filme
     let filme = await controllerFilme.buscarFilmeId(idFilme)
+
+    response.status(filme.status_code)
+    response.json(filme)
+})
+
+//Insere um novo filme no banco de dados
+app.post('/v1/locadora/filme', cors(), bodyParserJSON, async function (request, response){
+    //Recebe o objeto JSON pelo body da requisição 
+    let dadosBody = request.body
+
+    //Recebe o content type da requisição 
+    let contentType = request.headers['content-type']
+
+    //Chama a função da controller para inserir o filme, enviamos os dados do body e do content-type
+    let filme = await controllerFilme.inserirFilme(dadosBody, contentType)
 
     response.status(filme.status_code)
     response.json(filme)
