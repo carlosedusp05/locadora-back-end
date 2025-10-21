@@ -96,11 +96,22 @@ const inserirFilme = async function(filme, contentType){
                 let result = await filmeDAO.setInsertFilms(filme)
 
                 if(result){
-                    MESSAGE.HEADER.status   = MESSAGE.SUCESS_CREATED_ITEM.status
-                    MESSAGE.HEADER.status_code   = MESSAGE.SUCESS_CREATED_ITEM.status_code
-                    MESSAGE.HEADER.message   = MESSAGE.SUCESS_CREATED_ITEM.message
 
-                    return MESSAGE.HEADER //201
+                    //Chama a função para receber o ID gerado no BD
+                    let lastIdFilme = await filmeDAO.getSelectLastIdFilm()
+
+                    if(lastIdFilme){
+                        //Adiciona no JSON de filme Id que foi gerado pelo BD
+                        filme.id                    = lastIdFilme
+                        MESSAGE.HEADER.status       = MESSAGE.SUCESS_CREATED_ITEM.status
+                        MESSAGE.HEADER.status_code  = MESSAGE.SUCESS_CREATED_ITEM.status_code
+                        MESSAGE.HEADER.message      = MESSAGE.SUCESS_CREATED_ITEM.message
+                        MESSAGE.HEADER.response     = filme
+
+                        return MESSAGE.HEADER //201
+                    }else{
+                        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+                    }
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                 }
