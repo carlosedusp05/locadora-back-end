@@ -140,9 +140,9 @@ const atualizarFilme = async function(filme, id, contentType){
                 if(!validarDados){
                 
                 //Chama a função para validar a consisência do ID 
-                let validarID = await buscarFilmeId(id)
+                let validarId = await buscarFilmeId(id)
 
-                if(validarID.status_code == 200){
+                if(validarId.status_code == 200){
 
                     //Adicionando o ID no JSON com os dados dos filme
                     filme.id = parseInt(id)

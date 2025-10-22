@@ -23,3 +23,14 @@ VALUES('Vingadores: Ultimato', 'Em Vingadores: Ultimato, após Thanos eliminar m
 INSERT INTO tbl_filme(nome, sinopse, data_lancamento, duracao, orcamento, trailer, capa)
 VALUES('O Rei Leão: Live action', 'Live action do clássico da Disney, em O Rei Leão, Simba (Donald Glover) é um jovem leão cujo destino é se tornar o rei da selva. Entretanto, uma armadilha elaborada por seu tio Scar (Chiwetel Ejiofor) faz com que Mufasa (James Earl Jones), o atual rei, morra ao tentar salvar o filhote. Consumido pela culpa, Simba deixa o reino rumo a um local distante, onde encontra amigos que o ensinam a mais uma vez ter prazer pela vida.',
 '2019-07-18', '1:58:00', 260000000.00, 'https://www.youtube.com/watch?v=7cj1SGaeYMY', 'https://br.web.img3.acsta.net/c_310_420/medias/nmedia/18/87/84/28/19962110.jpg');
+
+CREATE TABLE tbl_genero(
+ id int auto_increment primary key,
+ nome varchar(100) NOT NULL
+);
+
+INSERT INTO tbl_genero(nome) VALUES('comédia');
+INSERT INTO tbl_genero(nome) VALUES('ação');
+INSERT INTO tbl_genero(nome) VALUES('drama');
+INSERT INTO tbl_genero(nome) VALUES('ficção científica');
+INSERT INTO tbl_genero(nome) VALUES('terror');

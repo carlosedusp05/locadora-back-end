@@ -35,7 +35,7 @@ const SUCESS_CREATED_ITEM = {status: true, status_code: 201, message: 'Requisiç
 
 const SUCESS_UPDATED_ITEM = {status: true, status_code: 200, message: 'Requisição bem-sucedida, objeto atualizado com sucesso!'}
 
-const SUCESS_DELETED_ITEM = {status: true, status_code: 200, message: 'Requisição bem-sucedida, filme apagado com sucesso!'}
+const SUCESS_DELETED_ITEM = {status: true, status_code: 200, message: 'Requisição bem-sucedida, objeto apagado com sucesso!'}
 
 module.exports = {
     HEADER,

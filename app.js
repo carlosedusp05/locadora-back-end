@@ -32,6 +32,7 @@ app.use((request, response, next)=>{
 
 //Import das controller da API
 const controllerFilme = require('./controller/filme/controller_filme.js')
+const controllerGenero = require('./controller/genero/controller_genero.js')
     
 //Endpoints para o CRUD de filmes
 
@@ -95,6 +96,62 @@ app.delete('/v1/locadora/filme/:id', cors(), async function (request, response) 
 
     response.status(filme.status_code)
     response.json(filme)
+})
+
+/**********************************END-POINTS GENERO*********************************************/
+
+//Retorna todos os generos
+app.get('/v1/locadora/generos', cors(), async function(request, response) {
+    let genero = await controllerGenero.listarTodosGeneros()
+
+    response.status(genero.status_code)
+    response.json(genero)
+})
+
+//Filtra os genero pelo id requisitado
+app.get('/v1/locadora/genero/:id', cors(), async function (request, response) {
+    let idGenero = request.params.id
+    
+    let genero = await controllerGenero.buscarGeneroPeloId(idGenero)
+
+    response.status(genero.status_code)
+    response.json(genero)
+})
+
+app.post('/v1/locadora/genero', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let contentType = request.headers['content-type']
+    
+    let genero = await controllerGenero.inserirGenero(dadosBody, contentType)
+
+    response.status(genero.status_code)
+    response.json(genero)
+
+})
+
+app.put('/v1/locadora/genero/:id', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let idGenero = request.params.id
+
+    let contentType = request.headers['content-type']
+
+    let genero = await controllerGenero.atualizarGenero(dadosBody, idGenero, contentType)
+
+    response.status(genero.status_code)
+    response.json(genero)
+}
+
+)
+
+app.delete('/v1/locadora/genero/:id', cors(), async function (request, response) {
+    let idGenero = request.params.id
+
+    let genero = await controllerGenero.excluirGenero(idGenero)
+
+    response.status(genero.status_code)
+    response.json(genero)
 })
 
 app.listen(PORT, function(){

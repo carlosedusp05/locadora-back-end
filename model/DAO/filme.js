@@ -151,7 +151,7 @@ const setDeleteFilms = async function(id) {
     }
 }
 
-const getSelectLastIdFilm = async function (params) {
+const getSelectLastIdFilm = async function () {
     try {
         let sql = 'select id from tbl_filme order by id desc limit 1'
     
