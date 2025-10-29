@@ -166,7 +166,7 @@ const excluirGenero = async function (id) {
                     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                 }
             }else{
-                return validarId
+                return validarId //404
             }
         }else{
             MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo [ID] inválido!!!!!'

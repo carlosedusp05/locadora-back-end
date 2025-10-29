@@ -33,6 +33,8 @@ app.use((request, response, next)=>{
 //Import das controller da API
 const controllerFilme = require('./controller/filme/controller_filme.js')
 const controllerGenero = require('./controller/genero/controller_genero.js')
+const controllerAtor = require('./controller/ator/controller_ator.js')
+const controllerDiretor = require('./controller/diretor/controller_diretor.js')
     
 //Endpoints para o CRUD de filmes
 
@@ -154,6 +156,67 @@ app.delete('/v1/locadora/genero/:id', cors(), async function (request, response)
     response.json(genero)
 })
 
+/**********************************END-POINTS ATORES*********************************************/
+app.get('/v1/locadora/atores', cors(), async function(request, response) {
+    let ator = await controllerAtor.listarAtores()
+
+    response.status(ator.status_code)
+    response.json(ator)
+})
+
+app.get('/v1/locadora/ator/:id', cors(), async function (request, response) {
+    let idAtor = request.params.id
+    
+    let ator = await controllerAtor.buscarAtorPeloId(idAtor)
+
+    response.status(ator.status_code)
+    response.json(ator)
+})
+
+app.post('/v1/locadora/ator', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let contentType = request.headers['content-type']
+    
+    let ator = await controllerAtor.inserirAtor(dadosBody, contentType)
+
+    response.status(ator.status_code)
+    response.json(ator)
+})
+
+app.put('/v1/locadora/ator/:id', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let idAtor = request.params.id
+
+    let contentType = request.headers['content-type']
+
+    let ator = await controllerAtor.atualizarAtor(dadosBody, idAtor, contentType)
+
+    response.status(ator.status_code)
+    response.json(ator)
+})
+
+app.delete('/v1/locadora/ator/:id', cors(), async function (request, response) {
+    let idAtor = request.params.id
+
+    let ator = await controllerAtor.excluirAtor(idAtor)
+
+    response.status(ator.status_code)
+    response.json(ator)
+})
+
+/**********************************END-POINTS ATORES*********************************************/
+
+app.get('/v1/locadora/diretores', cors(), async function(request, response) {
+    let diretor = await controllerDiretor.listarDiretores()
+
+    response.status(diretor.status_code)
+    response.json(diretor)
+})
+
 app.listen(PORT, function(){
     console.log('API aguardando requisições...')
 })
+
+

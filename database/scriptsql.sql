@@ -34,3 +34,43 @@ INSERT INTO tbl_genero(nome) VALUES('ação');
 INSERT INTO tbl_genero(nome) VALUES('drama');
 INSERT INTO tbl_genero(nome) VALUES('ficção científica');
 INSERT INTO tbl_genero(nome) VALUES('terror');
+
+CREATE TABLE tbl_ator(
+ id int auto_increment primary key,
+ nome varchar(100) NOT NULL,
+ biografia varchar(2000),
+ data_nascimento date NOT NULL,
+ data_falecimento date,
+ is_ativo boolean NOT NULL,
+ idade int NOT NULL,
+ foto varchar(200)
+);
+
+INSERT INTO tbl_ator(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
+ VALUES('Gaspar', 'Ator mexicano que fez uma rosa ficar azul na novela', '1981-07-12', null, true, 44, 'https://br.web.img2.acsta.net/c_310_420/pictures/14/11/28/14/14/213480.jpg');
+ 
+INSERT INTO tbl_ator(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
+VALUES('Marina Silva', 'Atriz brasileira famosa por papéis dramáticos no cinema nacional.', '1975-03-20', null, true, 50, 'https://www.camara.leg.br/internet/deputado/bandep/220637.jpgmaior.jpg');
+
+INSERT INTO tbl_ator(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
+VALUES('Alfred Hitchcock', 'Cineasta e produtor britânico, mestre do suspense.', '1899-08-13', '1980-04-29', false, 80, 'https://br.web.img2.acsta.net/c_310_420/pictures/15/02/25/20/43/378174.jpg');
+
+CREATE TABLE tbl_diretor(
+ id int auto_increment primary key,
+ nome varchar(100) NOT NULL,
+ biografia varchar(2000),
+ data_nascimento date NOT NULL,
+ data_falecimento date,
+ is_ativo boolean NOT NULL,
+ idade int,
+ foto varchar(200)
+);
+ 
+ INSERT INTO tbl_diretor(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
+VALUES('Greta Gerwig', 'Diretora americana famosa pelos filmes Lady Bird e Barbie.', '1983-08-04', null, true, 42, 'https://br.web.img3.acsta.net/pictures/19/10/18/03/17/2925410.jpg');
+
+INSERT INTO tbl_diretor(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
+VALUES('Stanley Kubrick', 'Cineasta americano, mestre em ficção científica e suspense.', '1928-07-26', '1999-03-07', false, 70, 'https://br.web.img3.acsta.net/medias/nmedia/18/85/93/27/19813127.jpeg');
+
+INSERT INTO tbl_ator(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
+ VALUES('Tim Burton', 'Diretor do filme Alice nos país e Edward mao', '1958-08-25', null, true, 67, 'https://upload.wikimedia.org/wikipedia/commons/9/95/Tim_Burton-63605.jpg');
