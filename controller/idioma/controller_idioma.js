@@ -1,17 +1,17 @@
 /*************************************************************************
  * Objetivo: Arquivo responsável pela manipulação de dados entre o app e a model
  *              (Validações, tratamento de dados tratamento de erros, etc).
- * Data: 29/10/2025
+ * Data: 04/11/2025
  * Autor: Carlos Eduardo
  * Versão: 1.0
  **************************************************************************************/
 
-const filmeDAO = require('../../model/DAO/ator.js')
+const filmeDAO = require('../../model/DAO/idioma.js')
 
 //Import do arquivo que padroniza todas as mensagens
 const MESSAGE_DEFAULT = require('../modulo/config_messages.js')
 
-const listarAtores = async function(){
+const listarIdiomas = async function(){
 
     //Realizando uma cópia do objeto MESSAGE_DEFAULT, permitindo que as alterações desta função não interfiram em outras funções.
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
@@ -19,13 +19,13 @@ const listarAtores = async function(){
     try {
         
         //Chama a função para retornar a lista de filmes
-        let result = await filmeDAO.getSelectAllActors()
+        let result = await filmeDAO.getSelectAllLanguages()
 
         if(result){
             if(result.length > 0){
                 MESSAGE.HEADER.status         = MESSAGE.SUCESS_REQUEST.status
                 MESSAGE.HEADER.status_code    = MESSAGE.SUCESS_REQUEST.status_code
-                MESSAGE.HEADER.response.actors = result 
+                MESSAGE.HEADER.response.Languages = result 
 
                 return MESSAGE.HEADER //200
             }else{
@@ -40,8 +40,7 @@ const listarAtores = async function(){
     }
 }
 
-//Retorna um ator filtrando pelo id
-const buscarAtorPeloId = async function(id){
+const buscarIdiomaPeloId = async function(id){
     //Realizando uma cópia do objeto MESSAGE_DEFAULT, permitindo que as alterações desta função não interfiram em outras funções.
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
@@ -50,13 +49,13 @@ const buscarAtorPeloId = async function(id){
         if( id != '' && id != null && id != undefined && !isNaN(id) && id > 0){
 
             //Chama a função para filtrar pelo id
-            let result = await filmeDAO.getSelectByIdActors(parseInt(id))
+            let result = await filmeDAO.getSelectByIdLanguages(parseInt(id))
 
             if(result){
                 if(result.length > 0){
                     MESSAGE.HEADER.status = MESSAGE.SUCESS_REQUEST.status
                     MESSAGE.HEADER.status_code = MESSAGE.SUCESS_REQUEST.status_code
-                    MESSAGE.HEADER.response.actor = result
+                    MESSAGE.HEADER.response.Language = result
 
                     return MESSAGE.HEADER //200
 
@@ -77,7 +76,7 @@ const buscarAtorPeloId = async function(id){
     }
 }
 
-const inserirAtor = async function(ator, contentType){
+const inserirIdioma = async function(idioma, contentType){
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
    
     try {
@@ -85,24 +84,25 @@ const inserirAtor = async function(ator, contentType){
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
                 //Chama a função de validação de dados de cadastro
-                let validarDados = await validarDadosAtor(ator)
+                let validarDados = await validarDadosIdioma(idioma)
 
                 if(!validarDados){
-                //Chama a função do DAO para inserir um novo ator!
-                let result = await filmeDAO.setInsertActors(ator)
-                
+
+                //Chama a função do DAO para inserir um novo idioma!
+                let result = await filmeDAO.setInsertLanguages(idioma)
+    
                 if(result){
 
                     //Chama a função para receber o ID gerado no BD
-                    let lastIdAtor = await filmeDAO.getSelectLastIdActor()
+                    let lastIdIdioma = await filmeDAO.getSelectLastIdLanguage()
 
-                    if(lastIdAtor){
-                        //Adiciona no JSON de ator Id que foi gerado pelo BD
-                        ator.id                     = lastIdAtor
+                    if(lastIdIdioma){
+                        //Adiciona no JSON de idioma Id que foi gerado pelo BD
+                        idioma.id                     = lastIdIdioma
                         MESSAGE.HEADER.status       = MESSAGE.SUCESS_CREATED_ITEM.status
                         MESSAGE.HEADER.status_code  = MESSAGE.SUCESS_CREATED_ITEM.status_code
                         MESSAGE.HEADER.message      = MESSAGE.SUCESS_CREATED_ITEM.message
-                        MESSAGE.HEADER.response     = ator
+                        MESSAGE.HEADER.response     = idioma
 
                         return MESSAGE.HEADER //201
                     }else{
@@ -122,7 +122,7 @@ const inserirAtor = async function(ator, contentType){
     }
 }
 
-const atualizarAtor = async function(ator, id, contentType){
+const atualizarIdioma = async function(idioma, id, contentType){
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
    
     try {
@@ -130,26 +130,26 @@ const atualizarAtor = async function(ator, id, contentType){
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
                 //Chama a função de validação de dados de cadastro
-                let validarDados = await validarDadosAtor(ator)
+                let validarDados = await validarDadosIdioma(idioma)
 
                 if(!validarDados){
                 
                 //Chama a função para validar a consisência do ID 
-                let validarId = await buscarAtorPeloId(id)
+                let validarId = await buscarIdiomaPeloId(id)
 
                 if(validarId.status_code == 200){
 
                     //Adicionando o ID no JSON com os dados dos filme
-                    ator.id = parseInt(id)
+                    idioma.id = parseInt(id)
 
                     //Chama a função do DAO para inserir um novo filme!
-                    let result = await filmeDAO.setUpdateActors(ator)
+                    let result = await filmeDAO.setUpdateLanguages(idioma)
 
                     if(result){
                         MESSAGE.HEADER.status       = MESSAGE.SUCESS_UPDATED_ITEM.status
                         MESSAGE.HEADER.status_code  = MESSAGE.SUCESS_UPDATED_ITEM.status_code
                         MESSAGE.HEADER.message      = MESSAGE.SUCESS_UPDATED_ITEM.message
-                        MESSAGE.HEADER.response     = ator
+                        MESSAGE.HEADER.response     = idioma
 
                         return MESSAGE.HEADER //201
                     }else{
@@ -169,7 +169,7 @@ const atualizarAtor = async function(ator, id, contentType){
     }
 }
 
-const excluirAtor = async function(id){
+const excluirIdioma = async function(id){
     //Realizando uma cópia do objeto MESSAGE_DEFAULT, permitindo que as alterações desta função não interfiram em outras funções.
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
@@ -177,12 +177,12 @@ const excluirAtor = async function(id){
         //Validação de campo obrigatório
         if( id != '' && id != null && id != undefined && !isNaN(id) && id > 0){
 
-            let validarId = await buscarAtorPeloId(id)
+            let validarId = await buscarIdiomaPeloId(id)
 
                 if(validarId.status_code == 200){
 
             //Chama a função para filtrar pelo id
-            let result = await filmeDAO.setDeleteActors(parseInt(id))
+            let result = await filmeDAO.setDeleteLanguages(parseInt(id))
 
             if(result){
                     MESSAGE.HEADER.status = MESSAGE.SUCESS_DELETED_ITEM.status
@@ -206,46 +206,25 @@ const excluirAtor = async function(id){
     }
 }
 
-const validarDadosAtor = async function (ator) {
+const validarDadosIdioma = async function (idioma) {
 
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
-    if(ator.biografia == '' || ator.biografia == null || ator.biografia == undefined || ator.biografia.length > 100){
-        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo biografia inválido!'
+    if(idioma.nome == '' || idioma.nome == null || idioma.nome == undefined || idioma.nome.length > 100){
+        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo nome inválido!'
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
 
-    }else if(ator.biografia == '' || ator.biografia == null || ator.biografia == undefined || ator.biografia.length > 2000){
-        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo biografia inválido!'
-        return MESSAGE.ERROR_REQUIRED_FIELDS //400
-
-    }else if(ator.data_nascimento == null || ator.data_nascimento == undefined || ator.data_nascimento.length != 10){
-        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo data nascimento inválido!'
-        return MESSAGE.ERROR_REQUIRED_FIELDS //400
-
-    }else if(ator.data_falecimento == undefined){
-        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo data falecimento inválido!'
-        return MESSAGE.ERROR_REQUIRED_FIELDS //400
-
-    }else if(ator.is_ativo != true && ator.is_ativo != false || ator.is_ativo == undefined){
-        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo is ativo inválido!'
-        return MESSAGE.ERROR_REQUIRED_FIELDS //400
-
-    }else if(ator.idade == undefined || ator.idade == null || ator.idade.length > 3 || isNaN(ator.idade)){
-        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo idade inválido!'
-        return MESSAGE.ERROR_REQUIRED_FIELDS //400
-
-    }else if(ator.foto == '' || ator.foto == null || ator.foto == undefined || ator.foto.length > 200){
-        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo foto inválido!'
-        return MESSAGE.ERROR_REQUIRED_FIELDS //400
     }else{
         return false
     }
 }
 
+
+
 module.exports = {
-    listarAtores,
-    buscarAtorPeloId,
-    inserirAtor,
-    atualizarAtor,
-    excluirAtor
+    listarIdiomas,
+    buscarIdiomaPeloId,
+    inserirIdioma,
+    atualizarIdioma,
+    excluirIdioma
 }

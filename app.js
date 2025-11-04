@@ -35,6 +35,8 @@ const controllerFilme = require('./controller/filme/controller_filme.js')
 const controllerGenero = require('./controller/genero/controller_genero.js')
 const controllerAtor = require('./controller/ator/controller_ator.js')
 const controllerDiretor = require('./controller/diretor/controller_diretor.js')
+const controllerProdutora = require('./controller/proutora/controller_produtora.js')
+const controllerIdioma = require('./controller/idioma/controller_idioma.js')
     
 //Endpoints para o CRUD de filmes
 
@@ -215,8 +217,152 @@ app.get('/v1/locadora/diretores', cors(), async function(request, response) {
     response.json(diretor)
 })
 
+app.get('/v1/locadora/diretor/:id', cors(), async function (request, response) {
+    let IdDiretor = request.params.id
+    
+    let diretor = await controllerDiretor.buscarDiretorPeloId(IdDiretor)
+
+    response.status(diretor.status_code)
+    response.json(diretor)
+})
+
+app.post('/v1/locadora/diretor', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let contentType = request.headers['content-type']
+    
+    let diretor = await controllerDiretor.inserirDiretor(dadosBody, contentType)
+
+    response.status(diretor.status_code)
+    response.json(diretor)
+})
+
+app.put('/v1/locadora/diretor/:id', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let IdDiretor = request.params.id
+
+    let contentType = request.headers['content-type']
+
+    let diretor = await controllerDiretor.atualizarDiretor(dadosBody, IdDiretor, contentType)
+
+    response.status(diretor.status_code)
+    response.json(diretor)
+})
+
+app.delete('/v1/locadora/diretor/:id', cors(), async function (request, response) {
+    let idDiretor = request.params.id
+
+    let diretor = await controllerDiretor.excluirDiretor(idDiretor)
+
+    response.status(diretor.status_code)
+    response.json(diretor)
+})
+
+/**********************************END-POINTS PRODUTORA*********************************************/
+
+app.get('/v1/locadora/produtoras', cors(), async function(request, response) {
+    let produtora = await controllerProdutora.listarProdutoras()
+
+    response.status(produtora.status_code)
+    response.json(produtora)
+})
+
+app.get('/v1/locadora/produtora/:id', cors(), async function (request, response) {
+    let IdProdutora = request.params.id
+    
+    let produtora = await controllerProdutora.buscarProdutoraPeloId(IdProdutora)
+
+    response.status(produtora.status_code)
+    response.json(produtora)
+})
+
+app.post('/v1/locadora/produtora', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let contentType = request.headers['content-type']
+    
+    let produtora = await controllerProdutora.inserirProdutora(dadosBody, contentType)
+
+    response.status(produtora.status_code)
+    response.json(produtora)
+})
+
+app.put('/v1/locadora/produtora/:id', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let IdProdutora = request.params.id
+
+    let contentType = request.headers['content-type']
+
+    let produtora = await controllerProdutora.atualizarProdutora(dadosBody, IdProdutora, contentType)
+
+    response.status(produtora.status_code)
+    response.json(produtora)
+})
+
+app.delete('/v1/locadora/produtora/:id', cors(), async function (request, response) {
+    let IdProdutora = request.params.id
+
+    let produtora = await controllerProdutora.excluirProdutora(IdProdutora)
+
+    response.status(produtora.status_code)
+    response.json(produtora)
+})
+
+/**********************************END-POINTS IDIOMAS*********************************************/
+
+app.get('/v1/locadora/idiomas', cors(), async function(request, response) {
+    let idioma = await controllerIdioma.listarIdiomas()
+
+    response.status(idioma.status_code)
+    response.json(idioma)
+})
+
+app.get('/v1/locadora/idioma/:id', cors(), async function (request, response) {
+    let IdIdioma = request.params.id
+    
+    let idioma = await controllerIdioma.buscarIdiomaPeloId(IdIdioma)
+
+    response.status(idioma.status_code)
+    response.json(idioma)
+})
+
+app.post('/v1/locadora/idioma', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let contentType = request.headers['content-type']
+    
+    let idioma = await controllerIdioma.inserirIdioma(dadosBody, contentType)
+
+    response.status(idioma.status_code)
+    response.json(idioma)
+})
+
+app.put('/v1/locadora/idioma/:id', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let IdIdioma = request.params.id
+
+    let contentType = request.headers['content-type']
+
+    let idioma = await controllerIdioma.atualizarIdioma(dadosBody, IdIdioma, contentType)
+
+    response.status(idioma.status_code)
+    response.json(idioma)
+})
+
+app.delete('/v1/locadora/idioma/:id', cors(), async function (request, response) {
+    let IdIdioma = request.params.id
+
+    let idioma = await controllerProdutora.excluirProdutora(IdIdioma)
+
+    response.status(idioma.status_code)
+    response.json(idioma)
+})
+
+
 app.listen(PORT, function(){
     console.log('API aguardando requisições...')
 })
-
 

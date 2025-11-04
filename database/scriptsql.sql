@@ -74,3 +74,25 @@ VALUES('Stanley Kubrick', 'Cineasta americano, mestre em ficção científica e 
 
 INSERT INTO tbl_ator(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
  VALUES('Tim Burton', 'Diretor do filme Alice nos país e Edward mao', '1958-08-25', null, true, 67, 'https://upload.wikimedia.org/wikipedia/commons/9/95/Tim_Burton-63605.jpg');
+
+CREATE TABLE tbl_produtora(
+ id_produtora int auto_increment primary key,
+ nome varchar(100) NOT NULL,
+ biografia varchar(2000),
+ data_fundacao date NOT NULL,
+ data_fechamento date,
+ is_ativo boolean NOT NULL,
+ logo varchar(200)
+);
+
+INSERT INTO tbl_produtora(nome, biografia, data_fundacao, data_fechamento, is_ativo, logo)
+VALUES('20th Century Fox Film Corporation', 'Estúdio clássico de Hollywood conhecido por filmes como Star Wars (originalmente), Alien e Titanic.', '1935-05-31', '2020-01-17', false, 'URL_DO_LOGO_FOX_ANTIGO');
+
+INSERT INTO tbl_produtora(nome, biografia, data_fundacao, data_fechamento, is_ativo, logo)
+VALUES(
+    'Warner Bros. Pictures', 'Um dos maiores e mais antigos estúdios de cinema dos Estados Unidos (Big Five), fundada pelos irmãos Warner.', '1923-04-04', NULL, TRUE, 'URL_DO_LOGO_WARNER_BROS'
+);
+
+INSERT INTO tbl_produtora(nome, biografia, data_fundacao, data_fechamento, is_ativo, logo)
+VALUES(
+    'Paramount Pictures','Um estúdio cinematográfico americano, conhecido por ter sido uma das primeiras grandes produtoras de Hollywood. Produziu O Poderoso Chefão e a franquia Missão Impossível.', '1912-05-08', NULL, TRUE, 'URL_DO_LOGO_PARAMOUNT');
