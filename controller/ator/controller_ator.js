@@ -222,7 +222,7 @@ const validarDadosAtor = async function (ator) {
         MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo data nascimento inválido!'
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
 
-    }else if(ator.data_falecimento == undefined){
+    }else if(ator.data_falecimento == undefined && ator.data_falecimento !== null && ator.data_falecimento.length >10 ){
         MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo data falecimento inválido!'
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
 

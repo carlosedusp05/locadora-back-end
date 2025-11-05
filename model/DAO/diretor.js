@@ -91,14 +91,17 @@ const setInsertDirectors = async function(diretor) {
 const setUpdateDirectors = async function(diretor) {
     try {
         if (diretor.data_falecimento == null) {
-            let sql = `INSERT INTO tbl_diretor(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
-                    VALUES('${diretor.nome}',
-                     '${diretor.biografia}',
-                     '${diretor.data_nascimento}',
-                      ${diretor.data_falecimento}, 
-                      ${diretor.is_ativo}, 
-                     '${diretor.idade}', 
-                     '${diretor.foto}')`
+            let sql = `UPDATE tbl_diretor
+                        SET
+                            nome = '${diretor.nome}',
+                            biografia = '${diretor.biografia}',
+                            data_nascimento = '${diretor.data_nascimento}',
+                            data_falecimento = ${diretor.data_falecimento}, 
+                            is_ativo = ${diretor.is_ativo}, 
+                            idade = '${diretor.idade}', 
+                            foto = '${diretor.foto}' 
+                        WHERE 
+                            id = ${diretor.id};`
 
         //$executeRawUnsafe() -> permite executar apenas scripts SQL que não tem retorno de dados (INSERT. UPDATE, DELETE)
         let result = await prisma.$executeRawUnsafe(sql)
@@ -108,14 +111,17 @@ const setUpdateDirectors = async function(diretor) {
         else
             return false
         } else {
-            let sql = `INSERT INTO tbl_diretor(nome, biografia, data_nascimento, data_falecimento, is_ativo, idade, foto)
-                    VALUES('${diretor.nome}',
-                     '${diretor.biografia}',
-                     '${diretor.data_nascimento}',
-                     '${diretor.data_falecimento}', 
-                      ${diretor.is_ativo}, 
-                     '${diretor.idade}', 
-                     '${diretor.foto}')`
+            let sql = `UPDATE tbl_diretor
+                        SET
+                            nome = '${diretor.nome}',
+                            biografia = '${diretor.biografia}',
+                            data_nascimento = '${diretor.data_nascimento}',
+                            data_falecimento = '${diretor.data_falecimento}', 
+                            is_ativo = ${diretor.is_ativo}, 
+                            idade = '${diretor.idade}', 
+                            foto = '${diretor.foto}' 
+                        WHERE 
+                            id = ${diretor.id};`
 
         //$executeRawUnsafe() -> permite executar apenas scripts SQL que não tem retorno de dados (INSERT. UPDATE, DELETE)
         let result = await prisma.$executeRawUnsafe(sql)
@@ -126,6 +132,7 @@ const setUpdateDirectors = async function(diretor) {
             return false   
         }
     } catch (error) {
+        console.log(error)
         return false
     }
 }

@@ -1,5 +1,5 @@
 /*************************************************************************
- * Objetivo: Arquivo responsável pelo CRUD de{idioma no Banco de Dados MySQL.
+ * Objetivo: Arquivo responsável pelo CRUD de{pais no Banco de Dados MySQL.
  * Data: 04/11/2025
  * Autor: Carlos Eduardo
  * Versão: 1.0
@@ -9,9 +9,9 @@ const {PrismaClient} = require('../../generated/prisma')
 
 const prisma = new PrismaClient()
 
-const getSelectAllLanguages = async function () {
+const getSelectAllCountries = async function () {
 try {
-    let sql = 'select * from tbl_idioma order by id desc'
+    let sql = 'select * from tbl_pais order by id desc'
 
     let result = await prisma.$queryRawUnsafe(sql)
 
@@ -25,11 +25,11 @@ try {
 }
 }
 
-const getSelectByIdLanguages = async function(id) {
+const getSelectByIdCountries = async function(id) {
     try {
 
         //Script sql
-        let sql = `select * from tbl_idioma where id=${id}`
+        let sql = `select * from tbl_pais where id=${id}`
     
         //Executa no Banco de Dados o script sql
         let result = await prisma.$queryRawUnsafe(sql)
@@ -45,10 +45,10 @@ const getSelectByIdLanguages = async function(id) {
     }
 }
 
-const setInsertLanguages = async function(idioma) {
+const setInsertCountries = async function(pais) {
     try {
-            let sql = `INSERT INTO tbl_idioma(nome)
-                    VALUES('${idioma.nome}')`
+            let sql = `INSERT INTO tbl_pais(nome)
+                    VALUES('${pais.nome}')`
 
        
         let result = await prisma.$executeRawUnsafe(sql)
@@ -63,10 +63,10 @@ const setInsertLanguages = async function(idioma) {
     }
 }
 
-const setUpdateLanguages = async function(idioma) {
+const setUpdateCountries = async function(pais) {
     try {
-        let sql = `UPDATE tbl_idioma set nome = '${idioma.nome}'
-                    WHERE id = ${idioma.id}`
+        let sql = `UPDATE tbl_pais set nome = '${pais.nome}'
+                    WHERE id = ${pais.id}`
 
    
     let result = await prisma.$executeRawUnsafe(sql)
@@ -77,13 +77,14 @@ const setUpdateLanguages = async function(idioma) {
         return false
 
 } catch (error) {
+    console.log(error)
     return false
 }
 }
 
-const setDeleteLanguages = async function(id) {
+const setDeleteCountries = async function(id) {
     try {
-        let sql =   `DELETE FROM tbl_idioma WHERE id = ${id}`
+        let sql =   `DELETE FROM tbl_pais WHERE id = ${id}`
 
         //$executeRawUnsafe() -> permite executar apenas scripts SQL que não tem retorno de dados (INSERT. UPDATE, DELETE)
         let result = await prisma.$executeRawUnsafe(sql)
@@ -97,9 +98,9 @@ const setDeleteLanguages = async function(id) {
     }
 }
 
-const getSelectLastIdLanguage = async function () {
+const getSelectLastIdCountry = async function () {
     try {
-        let sql = 'select id from tbl_idioma order by id desc limit 1'
+        let sql = 'select id from tbl_pais order by id desc limit 1'
     
         //Executa no Banco de Dados o script sql
         let result = await prisma.$queryRawUnsafe(sql)
@@ -116,10 +117,10 @@ const getSelectLastIdLanguage = async function () {
 }
 
 module.exports = {
-    getSelectAllLanguages,
-    getSelectByIdLanguages,
-    getSelectLastIdLanguage,
-    setDeleteLanguages,
-    setInsertLanguages,
-    setUpdateLanguages
+    getSelectAllCountries,
+    getSelectByIdCountries,
+    getSelectLastIdCountry,
+    setDeleteCountries,
+    setInsertCountries,
+    setUpdateCountries
 }

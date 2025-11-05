@@ -96,3 +96,28 @@ VALUES(
 INSERT INTO tbl_produtora(nome, biografia, data_fundacao, data_fechamento, is_ativo, logo)
 VALUES(
     'Paramount Pictures','Um estúdio cinematográfico americano, conhecido por ter sido uma das primeiras grandes produtoras de Hollywood. Produziu O Poderoso Chefão e a franquia Missão Impossível.', '1912-05-08', NULL, TRUE, 'URL_DO_LOGO_PARAMOUNT');
+
+
+
+CREATE TABLE tbl_pais(
+ id int auto_increment primary key,
+ nome varchar(100) NOT NULL
+);
+
+INSERT INTO tbl_pais (nome)
+VALUES ('Portugal'),('Inglaterra'),('Espanha');
+
+
+CREATE TABLE tbl_filme_genero (
+	id      int not null primary key auto_increment,
+    id_filme  int not null,
+    id_genero int not null,
+    
+    constraint FK_FILME_FILME_GENERO
+    foreign key (id_filme)
+    references tbl_filme(id),
+    
+    constraint FK_GENERO_FILME_GENERO
+    foreign key (id_genero)
+    references tbl_genero(id)
+)

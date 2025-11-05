@@ -90,13 +90,16 @@ const setInsertProducers = async function(produtora) {
 const setUpdateProducers = async function(produtora) {
     try {
         if (produtora.data_fechamento == null) {
-            let sql = `INSERT INTO tbl_produtora(nome, biografia, data_fundacao, data_fechamento, is_ativo, logo)
-                    VALUES('${produtora.nome}',
-                     '${produtora.biografia}',
-                     '${produtora.data_fundacao}',
-                      ${produtora.data_fechamento}, 
-                      ${produtora.is_ativo},  
-                     '${produtora.logo}')`
+            let sql = `UPDATE tbl_produtora
+                        SET
+                            nome = '${produtora.nome}',
+                            biografia = '${produtora.biografia}',
+                            data_fundacao = '${produtora.data_fundacao}',
+                            data_fechamento = ${produtora.data_fechamento}, 
+                            is_ativo = ${produtora.is_ativo}, 
+                            logo = '${produtora.logo}'
+                        WHERE 
+                            id_produtora = ${produtora.id};`
 
         //$executeRawUnsafe() -> permite executar apenas scripts SQL que não tem retorno de dados (INSERT. UPDATE, DELETE)
         let result = await prisma.$executeRawUnsafe(sql)
@@ -106,13 +109,16 @@ const setUpdateProducers = async function(produtora) {
         else
             return false
         } else {
-            let sql = `INSERT INTO tbl_produtora(nome, biografia, data_fundacao, data_fechamento, is_ativo, logo)
-                    VALUES('${produtora.nome}',
-                     '${produtora.biografia}',
-                     '${produtora.data_fundacao}',
-                     '${produtora.data_fechamento}', 
-                      ${produtora.is_ativo}, 
-                     '${produtora.logo}')`
+            let sql = `UPDATE tbl_produtora
+                        SET
+                            nome = '${produtora.nome}',
+                            biografia = '${produtora.biografia}',
+                            data_fundacao = '${produtora.data_fundacao}',
+                            data_fechamento = '${produtora.data_fechamento}', 
+                            is_ativo = ${produtora.is_ativo}, 
+                            logo = '${produtora.logo}'
+                        WHERE 
+                            id_produtora = ${produtora.id};`
 
         //$executeRawUnsafe() -> permite executar apenas scripts SQL que não tem retorno de dados (INSERT. UPDATE, DELETE)
         let result = await prisma.$executeRawUnsafe(sql)

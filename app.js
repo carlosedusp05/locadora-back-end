@@ -37,6 +37,7 @@ const controllerAtor = require('./controller/ator/controller_ator.js')
 const controllerDiretor = require('./controller/diretor/controller_diretor.js')
 const controllerProdutora = require('./controller/proutora/controller_produtora.js')
 const controllerIdioma = require('./controller/idioma/controller_idioma.js')
+const controllerPais = require('./controller/pais/controller_pais.js')
     
 //Endpoints para o CRUD de filmes
 
@@ -359,6 +360,58 @@ app.delete('/v1/locadora/idioma/:id', cors(), async function (request, response)
 
     response.status(idioma.status_code)
     response.json(idioma)
+})
+
+
+/**********************************END-POINTS PAISES*********************************************/
+
+app.get('/v1/locadora/paises', cors(), async function(request, response) {
+    let pais = await controllerPais.listarPaises()
+
+    response.status(pais.status_code)
+    response.json(pais)
+})
+
+app.get('/v1/locadora/pais/:id', cors(), async function (request, response) {
+    let IdPais = request.params.id
+    
+    let pais = await controllerPais.buscarPaisPeloId(IdPais)
+
+    response.status(pais.status_code)
+    response.json(pais)
+})
+
+app.post('/v1/locadora/pais', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let contentType = request.headers['content-type']
+    
+    let pais = await controllerPais.inserirPais(dadosBody, contentType)
+
+    response.status(pais.status_code)
+    response.json(pais)
+})
+
+app.put('/v1/locadora/pais/:id', cors(), bodyParserJSON, async function (request, response) {
+    let dadosBody = request.body
+
+    let IdPais = request.params.id
+
+    let contentType = request.headers['content-type']
+
+    let pais = await controllerPais.atualizarPais(dadosBody, IdPais, contentType)
+
+    response.status(pais.status_code)
+    response.json(pais)
+})
+
+app.delete('/v1/locadora/pais/:id', cors(), async function (request, response) {
+    let IdPais = request.params.id
+
+    let pais = await controllerPais.excluirPais(IdPais)
+
+    response.status(pais.status_code)
+    response.json(pais)
 })
 
 
