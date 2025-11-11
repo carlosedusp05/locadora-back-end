@@ -28,9 +28,17 @@ const listarFilmes = async function(){
 
         if(result){
             if(result.length > 0){
+
+                //Processamento para adicionar os generos em cada filme
+                for(filme of result){
+                    let resultGenerosFilme = await controllerFilmeGenero.listarGenerosIdFilme(filme.id)
+                    if(resultGenerosFilme.status_code == 200)
+                    filme.genero = resultGenerosFilme.response.filmsGenre
+                }
+
                 MESSAGE.HEADER.status         = MESSAGE.SUCESS_REQUEST.status
                 MESSAGE.HEADER.status_code    = MESSAGE.SUCESS_REQUEST.status_code
-                MESSAGE.HEADER.response.films = result 
+                MESSAGE.HEADER.response.films = result
 
                 return MESSAGE.HEADER //200
             }else{
@@ -59,6 +67,13 @@ const buscarFilmeId = async function(id){
 
             if(result){
                 if(result.length > 0){
+
+                    for(filme of result){
+                        let resultGenerosFilme = await controllerFilmeGenero.listarGenerosIdFilme(filme.id)
+                        if(resultGenerosFilme.status_code == 200)
+                        filme.genero = resultGenerosFilme.response.filmsGenre
+                    }
+                    
                     MESSAGE.HEADER.status = MESSAGE.SUCESS_REQUEST.status
                     MESSAGE.HEADER.status_code = MESSAGE.SUCESS_REQUEST.status_code
                     MESSAGE.HEADER.response.film = result
@@ -102,27 +117,43 @@ const inserirFilme = async function(filme, contentType){
 
                     //Chama a função para receber o ID gerado no BD
                     let lastIdFilme = await filmeDAO.getSelectLastIdFilm()
+                
 
                     if(lastIdFilme){
 
                         //Processamentopara inserir dados na tabela relação filme e genero
 
                         //Repetição para pegar cada genero e enviar para o DAO do filmeGenero
-                        filme.genero.forEach(async function(genero){
+                        //filme.genero.forEach(async function(genero){
+                        for(genero of filme.genero){
                             let filmeGenero = {id_filme:    lastIdFilme,
                                                id_genero:   genero.id
                             }
 
                             let resultFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero, contentType)
-                            console.log(resultFilmeGenero)
-                        })
+                            
+                            if(resultFilmeGenero.status_code != 201)
+                                return MESSAGE.ERROR_RELATION_TABLE //200, porém com problemas na tabela relação
+                        }
 
                         //Adiciona no JSON de filme Id que foi gerado pelo BD
                         filme.id                    = lastIdFilme
                         MESSAGE.HEADER.status       = MESSAGE.SUCESS_CREATED_ITEM.status
                         MESSAGE.HEADER.status_code  = MESSAGE.SUCESS_CREATED_ITEM.status_code
                         MESSAGE.HEADER.message      = MESSAGE.SUCESS_CREATED_ITEM.message
-                        MESSAGE.HEADER.response     = filme
+                        
+                        //Processamento para trazer dados do genero para trazer dados na tabela relação
+
+                        //Essa linha apaga o atributo genero que chega no POST apenas IDs
+                        delete filme.genero
+
+                        //Pesqisa no BD quais os generos e os seus dados que foram inseridos na tabela relação 
+                        let resultGenerosFilme = await controllerFilmeGenero.listarGenerosIdFilme(lastIdFilme)
+
+                        //Adiciona novamente o atributo genero com todas as informações do genero(ID, Nome)
+                        filme.genero = resultGenerosFilme.response.filmsGenre
+                        
+                        MESSAGE.HEADER.response = filme
 
                         return MESSAGE.HEADER //201
                     }else{
@@ -138,6 +169,7 @@ const inserirFilme = async function(filme, contentType){
             return MESSAGE.ERROR_CONTENT_TYPE //415
         }
     } catch (error) {
+        console.log(error)
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }

@@ -203,6 +203,7 @@ const listarGenerosIdFilme = async function (idFilme) {
         if( idFilme != '' && idFilme != null && idFilme != undefined && !isNaN(idFilme) && idFilme > 0){
 
             let result = await filmeDAO.getSelectGenreByIdFilm(parseInt(idFilme))
+            
 
             if(result){
                 if(result.length > 0){
