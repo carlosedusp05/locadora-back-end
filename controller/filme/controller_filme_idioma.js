@@ -1,27 +1,27 @@
 /*************************************************************************
  * Objetivo: Arquivo responsável pela manipulação de dados entre o app e a model
  *              (Validações, tratamento de dados tratamento de erros, etc).
- * Data: 05/11/2025
+ * Data: 12/12/2025
  * Autor: Carlos Eduardo
  * Versão: 1.0
  **************************************************************************************/
 
-const filmeDAO = require('../../model/DAO/filme_diretor.js')
+const filmeDAO = require('../../model/DAO/filme_idioma.js')
 
 const MESSAGE_DEFAULT = require('../modulo/config_messages.js')
 
-const listarFilmesDiretores = async function () {
+const listarFilmesIdiomas = async function () {
 
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
     try {
-        let result = await filmeDAO.getSelectAllFilmsDirectors()
+        let result = await filmeDAO.getSelectAllFilmsLanguages()
 
         if(result){
             if(result.length > 0){
                 MESSAGE.HEADER.status           = MESSAGE.SUCESS_REQUEST.status
                 MESSAGE.HEADER.status_code      = MESSAGE.SUCESS_REQUEST.status_code
-                MESSAGE.HEADER.response.filmsDirectors  = result 
+                MESSAGE.HEADER.response.filmsLanguages  = result 
 
                 return MESSAGE.HEADER //200 retorna a mensagem bonitinha
             }else{
@@ -37,19 +37,19 @@ const listarFilmesDiretores = async function () {
     
 }
 
-const buscarFilmeDiretorPeloId = async function (id) {
+const buscarFilmeIdiomaPeloId = async function (id) {
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
     try {
         if( id != '' && id != null && id != undefined && !isNaN(id) && id > 0){
 
-            let result = await filmeDAO.getSelectFilmDirectorById(parseInt(id))
+            let result = await filmeDAO.getSelectFilmLanguagesById(parseInt(id))
 
             if(result){
                 if(result.length > 0){
                     MESSAGE.HEADER.status = MESSAGE.SUCESS_REQUEST.status
                     MESSAGE.HEADER.status_code = MESSAGE.SUCESS_REQUEST.status_code
-                    MESSAGE.HEADER.response.filmsDirector = result
+                    MESSAGE.HEADER.response.filmsLanguages = result
 
                     return MESSAGE.HEADER //200
 
@@ -68,26 +68,26 @@ const buscarFilmeDiretorPeloId = async function (id) {
     }
 }
 
-const inserirFilmeDiretor = async function (filmeDiretor, contentType) {
+const inserirFilmeIdioma = async function (filmeIdioma, contentType) {
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
     try {
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
-            let validarDados = await validarDadosFilmeDiretor(filmeDiretor)
+            let validarDados = await validarDadosFilmeIdioma(filmeIdioma)
 
             if(!validarDados){
 
-                let result = await filmeDAO.setInsertFilmsDirectors(filmeDiretor)
+                let result = await filmeDAO.setInsertFilmsLanguages(filmeIdioma)
 
                 if(result){
-                     let lastIdDiretor = await filmeDAO.getSelectLastId()
+                     let lastIdIdioma = await filmeDAO.getSelectLastId()
 
-                     if(lastIdDiretor){
-                        filmeDiretor.id              = lastIdDiretor
+                     if(lastIdIdioma){
+                        filmeIdioma.id              = lastIdIdioma
                         MESSAGE.HEADER.status       = MESSAGE.SUCESS_CREATED_ITEM.status
                         MESSAGE.HEADER.status_code  = MESSAGE.SUCESS_CREATED_ITEM.status_code
                         MESSAGE.HEADER.message      = MESSAGE.SUCESS_CREATED_ITEM.message
-                        MESSAGE.HEADER.response     = filmeDiretor
+                        MESSAGE.HEADER.response     = filmeIdioma
 
                         return MESSAGE.HEADER //201
                      }else{
@@ -105,29 +105,28 @@ const inserirFilmeDiretor = async function (filmeDiretor, contentType) {
     } catch (error) {
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
-
 }
 
-const atualizarFilmeDiretor = async function (filmeDiretor, id, contentType) {
+const atualizarFilmeIdioma = async function (filmeIdioma, id, contentType) {
    let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
     try {
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
-            let validarDados = await validarDadosFilmeDiretor(filmeDiretor)
+            let validarDados = await validarDadosFilmeIdioma(filmeIdioma)
 
             if(!validarDados){
-                let validarId = await buscarFilmeDiretorPeloId(parseInt(id))
+                let validarId = await buscarFilmeIdiomaPeloId(parseInt(id))
 
                 if(validarId.status_code == 200){
-                    filmeDiretor.id = parseInt(id)
+                    filmeIdioma.id = parseInt(id)
 
-                    let result = filmeDAO.setUpdateFilmsDirectors(filmeDiretor)
+                    let result = filmeDAO.setUpdateFilmsLanguages(filmeIdioma)
 
                     if(result){
                         MESSAGE.HEADER.status       = MESSAGE.SUCESS_UPDATED_ITEM.status
                         MESSAGE.HEADER.status_code  = MESSAGE.SUCESS_UPDATED_ITEM.status_code
                         MESSAGE.HEADER.message      = MESSAGE.SUCESS_UPDATED_ITEM.message
-                        MESSAGE.HEADER.response     = filmeDiretor
+                        MESSAGE.HEADER.response     = filmeIdioma
 
                         return MESSAGE.HEADER //201
                     }else{
@@ -147,15 +146,15 @@ const atualizarFilmeDiretor = async function (filmeDiretor, id, contentType) {
     }
 }
 
-const excluirFilmeDiretor = async function (id) {
+const excluirFilmeIdioma = async function (id) {
      let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
      try {
         if(id != '' && id != null && id != undefined && !isNaN(id) && id > 0){
-            let validarId = await buscarFilmeDiretorPeloId(id)
+            let validarId = await buscarFilmeIdiomaPeloId(id)
             
             if(validarId.status_code == 200){
-                let result = await filmeDAO.setDeleteFilmsDirectors(parseInt(id))
+                let result = await filmeDAO.setDeleteFilmsLanguages(parseInt(id))
                 if(result){
                     MESSAGE.HEADER.status = MESSAGE.SUCESS_DELETED_ITEM.status
                     MESSAGE.HEADER.status_code = MESSAGE.SUCESS_DELETED_ITEM.status_code
@@ -179,15 +178,15 @@ const excluirFilmeDiretor = async function (id) {
      }
 }
 
-const validarDadosFilmeDiretor = async function (filmeDiretor) {
+const validarDadosFilmeIdioma = async function (filmeIdioma) {
 
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
-    if(filmeDiretor.id_filme == '' || filmeDiretor.id_filme == null || filmeDiretor.id_filme == undefined || filmeDiretor.id_filme.length <= 0){
+    if(filmeIdioma.id_filme == '' || filmeIdioma.id_filme == null || filmeIdioma.id_filme == undefined || filmeIdioma.id_filme.length <= 0){
         MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo id filme inválido!'
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
-    }else if(filmeDiretor.id_diretor == '' || filmeDiretor.id_diretor == null || filmeDiretor.id_diretor == undefined || filmeDiretor.id_diretor.length <= 0){
-        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo id diretor inválido!'
+    }else if(filmeIdioma.id_idioma == '' || filmeIdioma.id_idioma == null || filmeIdioma.id_idioma == undefined || filmeIdioma.id_idioma.length <= 0){
+        MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo id Idioma inválido!'
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
 
     }else{
@@ -195,21 +194,21 @@ const validarDadosFilmeDiretor = async function (filmeDiretor) {
     }
 }
 
-//Retorna os Diretors pelo id do filme 
-const listarDiretorsIdFilme = async function (idFilme) {
+//Retorna os Idiomas pelo id do filme 
+const listarIdiomasIdFilme = async function (idFilme) {
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
     try {
         if( idFilme != '' && idFilme != null && idFilme != undefined && !isNaN(idFilme) && idFilme > 0){
 
-            let result = await filmeDAO.getSelectDirectorByIdFilm(parseInt(idFilme))
+            let result = await filmeDAO.getSelectLanguageByIdFilm(parseInt(idFilme))
             
 
             if(result){
                 if(result.length > 0){
                     MESSAGE.HEADER.status = MESSAGE.SUCESS_REQUEST.status
                     MESSAGE.HEADER.status_code = MESSAGE.SUCESS_REQUEST.status_code
-                    MESSAGE.HEADER.response.filmsDirector = result
+                    MESSAGE.HEADER.response.filmsLanguage = result
 
                     return MESSAGE.HEADER //200
 
@@ -228,20 +227,20 @@ const listarDiretorsIdFilme = async function (idFilme) {
     }
 }
 
-//Retorna os filmes pelo id do Diretor 
-const listarFilmesIdDiretor = async function (idDiretor) {
+//Retorna os filmes pelo id do Idioma 
+const listarFilmesIdIdioma = async function (idIdioma) {
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
     try {
-        if( idDiretor != '' && idDiretor != null && idDiretor != undefined && !isNaN(idDiretor) && idDiretor > 0){
+        if( idIdioma != '' && idIdioma != null && idIdioma != undefined && !isNaN(idIdioma) && idIdioma > 0){
 
-            let result = await filmeDAO.getSelectFilmByIdDirector(parseInt(idDiretor))
+            let result = await filmeDAO.getSelectFilmByIdLanguages(parseInt(idIdioma))
 
             if(result){
                 if(result.length > 0){
                     MESSAGE.HEADER.status = MESSAGE.SUCESS_REQUEST.status
                     MESSAGE.HEADER.status_code = MESSAGE.SUCESS_REQUEST.status_code
-                    MESSAGE.HEADER.response.filmsDirector = result
+                    MESSAGE.HEADER.response.filmsLanguages = result
 
                     return MESSAGE.HEADER //200
 
@@ -252,7 +251,7 @@ const listarFilmesIdDiretor = async function (idDiretor) {
                 return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
             }
         }else{
-            MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo id Diretor inválido!!!!!'
+            MESSAGE.ERROR_REQUIRED_FIELDS.invalid_field = 'Atributo id Idioma inválido!!!!!'
             return MESSAGE.ERROR_REQUIRED_FIELDS //400
         }
     } catch (error) {
@@ -260,15 +259,15 @@ const listarFilmesIdDiretor = async function (idDiretor) {
     }
 }
 
-const excluirDiretorsPeloFilme = async function (id_filme) {
+const excluirIdiomasPeloFilme = async function (id_filme) {
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
 
     try {
        if(id_filme != '' && id_filme != null && id_filme != undefined && !isNaN(id_filme) && id_filme > 0){
-           let validarId = await buscarFilmeDiretorPeloId(id_filme)
+           let validarId = await buscarFilmeIdiomaPeloId(id_filme)
            
            if(validarId.status_code == 200){
-               let result = await filmeDAO.setDeleteDirectorsByIdFilm(parseInt(id_filme))
+               let result = await filmeDAO.setDeleteLanguagesByIdFilm(parseInt(id_filme))
                if(result){
                    MESSAGE.HEADER.status = MESSAGE.SUCESS_DELETED_ITEM.status
                    MESSAGE.HEADER.status_code = MESSAGE.SUCESS_DELETED_ITEM.status_code
@@ -295,12 +294,12 @@ const excluirDiretorsPeloFilme = async function (id_filme) {
 
 
 module.exports = {
-    inserirFilmeDiretor,
-    listarFilmesDiretores,
-    listarFilmesIdDiretor,
-    listarDiretorsIdFilme,
-    atualizarFilmeDiretor,
-    excluirFilmeDiretor,
-    buscarFilmeDiretorPeloId,
-    excluirDiretorsPeloFilme
+    inserirFilmeIdioma,
+    listarFilmesIdiomas,
+    listarFilmesIdIdioma,
+    listarIdiomasIdFilme,
+    atualizarFilmeIdioma,
+    excluirFilmeIdioma,
+    buscarFilmeIdiomaPeloId,
+    excluirIdiomasPeloFilme
 }

@@ -262,7 +262,7 @@ const listarFilmesIdGenero = async function (idGenero) {
 
 const excluirGenerosPeloFilme = async function (id_filme) {
     let MESSAGE = JSON.parse(JSON.stringify(MESSAGE_DEFAULT))
-
+   
     try {
        if(id_filme != '' && id_filme != null && id_filme != undefined && !isNaN(id_filme) && id_filme > 0){
            let validarId = await buscarFilmeGeneroPeloId(id_filme)

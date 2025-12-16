@@ -11,7 +11,7 @@ const filmeDAO = require('../../model/DAO/filme.js')
 //Import da controller filme genero
 const controllerFilmeGenero = require('../../controller/filme/controller_filme_genero.js')
 const controllerFilmeDiretor = require('../../controller/filme/controller_filme_diretor.js')
-
+const controllerFilmeIdioma = require('../../controller/filme/controller_filme_idioma.js')
 //Import do arquivo que padroniza todas as mensagens
 const MESSAGE_DEFAULT = require('../modulo/config_messages.js')
 
@@ -34,14 +34,19 @@ const listarFilmes = async function () {
                 for (filme of result) {
                     let resultGenerosFilme = await controllerFilmeGenero.listarGenerosIdFilme(filme.id)
                     if (resultGenerosFilme.status_code == 200)
-                        filme.genero = resultGenerosFilme.response.filmsGenre
+                        filme.generos = resultGenerosFilme.response.filmsGenre
                 }
 
                 for (filme of result) {
                     let resultDiretoresFilme = await controllerFilmeDiretor.listarDiretorsIdFilme(filme.id)
                     if (resultDiretoresFilme.status_code == 200)
                         filme.diretor = resultDiretoresFilme.response.filmsDirector
-                    console.log(filme.diretor)
+                }
+
+                for (filme of result) {
+                    let resultIdiomasFilme = await controllerFilmeIdioma.listarIdiomasIdFilme(filme.id)
+                    if (resultIdiomasFilme.status_code == 200)
+                        filme.idioma = resultIdiomasFilme.response.filmsLanguages
                 }
                 
                 MESSAGE.HEADER.status = MESSAGE.SUCESS_REQUEST.status
@@ -79,7 +84,19 @@ const buscarFilmeId = async function (id) {
                     for (filme of result) {
                         let resultGenerosFilme = await controllerFilmeGenero.listarGenerosIdFilme(filme.id)
                         if (resultGenerosFilme.status_code == 200)
-                            filme.genero = resultGenerosFilme.response.filmsGenre
+                            filme.generos = resultGenerosFilme.response.filmsGenre
+                    }
+
+                    for (filme of result) {
+                        let resultDiretoresFilme = await controllerFilmeDiretor.listarDiretorsIdFilme(filme.id)
+                        if (resultDiretoresFilme.status_code == 200)
+                            filme.diretores = resultDiretoresFilme.response.filmsDirector
+                    }
+
+                    for (filme of result) {
+                        let resultIdiomasFilme = await controllerFilmeIdioma.listarIdiomasIdFilme(filme.id)
+                        if (resultIdiomasFilme.status_code == 200)
+                            filme.idiomas = resultIdiomasFilme.response.filmsLanguages
                     }
 
                     MESSAGE.HEADER.status = MESSAGE.SUCESS_REQUEST.status
@@ -140,8 +157,32 @@ const inserirFilme = async function (filme, contentType) {
                             }
 
                             let resultFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero, contentType)
-
+                            
                             if (resultFilmeGenero.status_code != 201)
+                                return MESSAGE.ERROR_RELATION_TABLE //200, porém com problemas na tabela relação
+                        }
+
+                        for (diretor of filme.diretor) {
+                            let filmeDiretor = {
+                                id_filme: lastIdFilme,
+                                id_diretor: diretor.id
+                            }
+
+                            let resultFilmeDiretor = await controllerFilmeDiretor.inserirFilmeDiretor(filmeDiretor, contentType)
+                           
+                            if (resultFilmeDiretor.status_code != 201)
+                                return MESSAGE.ERROR_RELATION_TABLE //200, porém com problemas na tabela relação
+                        }
+
+                        for (idioma of filme.idioma) {
+                            let filmeIdioma = {
+                                id_filme: lastIdFilme,
+                                id_idioma: idioma.id
+                            }
+
+                            let resultFilmeIdioma = await controllerFilmeIdioma.inserirFilmeIdioma(filmeIdioma, contentType)
+
+                            if (resultFilmeIdioma.status_code != 201)
                                 return MESSAGE.ERROR_RELATION_TABLE //200, porém com problemas na tabela relação
                         }
 
@@ -160,7 +201,17 @@ const inserirFilme = async function (filme, contentType) {
                         let resultGenerosFilme = await controllerFilmeGenero.listarGenerosIdFilme(lastIdFilme)
 
                         //Adiciona novamente o atributo genero com todas as informações do genero(ID, Nome)
-                        filme.genero = resultGenerosFilme.response.filmsGenre
+                        filme.generos = resultGenerosFilme.response.filmsGenre
+
+                        delete filme.diretor
+                        let resultDiretoresFilme = await controllerFilmeDiretor.listarDiretorsIdFilme(lastIdFilme)
+
+                        filme.diretores = resultDiretoresFilme.response.filmsDirector
+
+                        delete filme.idioma
+                        let resultIdiomasFilme = await controllerFilmeIdioma.listarIdiomasIdFilme(lastIdFilme)
+                 
+                        filme.idiomas = resultIdiomasFilme.response.filmsLanguage
 
                         MESSAGE.HEADER.response = filme
 
@@ -204,26 +255,61 @@ const atualizarFilme = async function (filme, id, contentType) {
                     filme.id = parseInt(id)
 
                     let deleteGenero = await controllerFilmeGenero.excluirGenerosPeloFilme(id)
-
+                    console.log(deleteGenero)
                     if (deleteGenero.status_code != 200)
+                        return MESSAGE.ERROR_RELATION_TABLE
+
+
+                    let deleteDiretor = await controllerFilmeDiretor.excluirDiretorsPeloFilme(id)
+                    console.log(deleteDiretor)
+                    if (deleteDiretor.status_code != 200)
+                        return MESSAGE.ERROR_RELATION_TABLE
+
+
+                    let deleteIdioma = await controllerFilmeIdioma.excluirIdiomasPeloFilme(id)
+                    console.log(deleteIdioma)
+                    if (deleteIdioma.status_code != 200)
                         return MESSAGE.ERROR_RELATION_TABLE
 
                     //Chama a função do DAO para inserir um novo filme!
                     let result = await filmeDAO.setUpdateFilms(filme)
-
+    
                     if (result) {
                         for (genero of filme.genero) {
                             let filmeGenero = {
-                                id_filme:  id,
+                                id_filme: lastIdFilme,
                                 id_genero: genero.id
                             }
 
                             let resultFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero, contentType)
-
+                            
                             if (resultFilmeGenero.status_code != 201)
                                 return MESSAGE.ERROR_RELATION_TABLE //200, porém com problemas na tabela relação
                         }
 
+                        for (diretor of filme.diretor) {
+                            let filmeDiretor = {
+                                id_filme: lastIdFilme,
+                                id_diretor: diretor.id
+                            }
+
+                            let resultFilmeDiretor = await controllerFilmeDiretor.inserirFilmeDiretor(filmeDiretor, contentType)
+                           
+                            if (resultFilmeDiretor.status_code != 201)
+                                return MESSAGE.ERROR_RELATION_TABLE //200, porém com problemas na tabela relação
+                        }
+
+                        for (idioma of filme.idioma) {
+                            let filmeIdioma = {
+                                id_filme: lastIdFilme,
+                                id_idioma: idioma.id
+                            }
+
+                            let resultFilmeIdioma = await controllerFilmeIdioma.inserirFilmeIdioma(filmeIdioma, contentType)
+
+                            if (resultFilmeIdioma.status_code != 201)
+                                return MESSAGE.ERROR_RELATION_TABLE //200, porém com problemas na tabela relação
+                        }
 
                         MESSAGE.HEADER.status = MESSAGE.SUCESS_UPDATED_ITEM.status
                         MESSAGE.HEADER.status_code = MESSAGE.SUCESS_UPDATED_ITEM.status_code
