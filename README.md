@@ -20,3 +20,6 @@ As seguintes ferramentas e tecnologias foram utilizadas no desenvolvimento do pr
 - **Postman** → Teste das rotas da API  
 - **Git** → Controle de versão do projeto  
 - **GitHub** → Hospedagem e gerenciamento do repositório
+
+## Autor
+[Carlos Eduardo.](https://www.linkedin.com/in/carlos-eduardo-silva-pereira-a2413b353/)
